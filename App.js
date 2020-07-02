@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {Text, StyleSheet, View, FlatList} from 'react-native';
 import Cita from './components/Cita';
+import Formulario from './components/Formulario';
 
 const App = () => {
-  const [citas, setCita] = useState([
+  const [citas, setCitas] = useState([
     {
       id: '1',
       paciente: 'Hook',
@@ -24,14 +25,26 @@ const App = () => {
     },
   ]);
 
+  const eliminarPaciente = id => {
+    setCitas(citasActuales => {
+      return citasActuales.filter(cita => cita.id !== id);
+    });
+  };
+
   return (
     <>
       <View style={styles.contenedor}>
         <Text style={styles.titulo}>Administrador de citas</Text>
+        <Formulario />
+        <Text style={styles.titulo}>
+          {citas.length > 0 ? 'Administra tus citas' : 'No hay citas'}
+        </Text>
 
         <FlatList
           data={citas}
-          renderItem={({item}) => <Cita item={item} />}
+          renderItem={({item}) => (
+            <Cita item={item} eliminarPaciente={eliminarPaciente} />
+          )}
           keyExtractor={cita => cita.id}
         />
       </View>
@@ -49,6 +62,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#FFF',
+    marginBottom: 10,
   },
 });
 export default App;
