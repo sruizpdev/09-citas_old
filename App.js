@@ -9,6 +9,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, FlatList} from 'react-native';
 import Cita from './components/Cita';
+import Formulario from './components/Formulario';
 
 const App = () => {
   const [citas, setCitas] = useState([
@@ -17,14 +18,24 @@ const App = () => {
     {id: '3', paciente: 'Redux', propietario: 'Sergio', sintomas: 'no canta'},
   ]);
 
+  const eliminarPaciente = (id) => {
+    setCitas((citasActuales) => {
+      return citasActuales.filter((cita) => cita.id !== id);
+    });
+  };
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.title}>Appointment Manager</Text>
-
+        <Text style={styles.title}>Administrador de citas</Text>
+        <Formulario />
+        <Text style={styles.title}>
+          {citas.length > 0 ? 'Administra tus citas' : 'No hay citas'}
+        </Text>
         <FlatList
           data={citas}
-          renderItem={({item}) => <Cita cita={item} />}
+          renderItem={({item}) => (
+            <Cita eliminarPaciente={eliminarPaciente} cita={item} />
+          )}
           keyExtractor={(cita) => cita.id}
         />
       </View>
@@ -34,13 +45,14 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#B03A2E',
+    backgroundColor: '#76448A',
     flex: 1,
   },
   title: {
     textAlign: 'center',
     color: '#FFF',
     marginTop: 20,
+    marginBottom: 10,
     fontSize: 24,
     fontWeight: 'bold',
   },
